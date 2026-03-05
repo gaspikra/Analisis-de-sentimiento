@@ -1,8 +1,8 @@
 from langdetect import detect
-from clean_data import ICleanDataStrategy
+from clean_data.ICleanDataFilter import ICleanDataFilter
 
-class EnglishNewsStrategy(ICleanDataStrategy):
-    def clean_data(self, dataframe):
+class EnglishNews(ICleanDataFilter):
+    def process(self, dataframe):
         dataframe["es_ingles"] = dataframe["real_news"].apply(self._es_ingles) 
         return dataframe
 

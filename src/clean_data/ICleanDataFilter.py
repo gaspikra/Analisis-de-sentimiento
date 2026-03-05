@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class ICleanDataStrategy(ABC):
+class ICleanDataFilter(ABC):
     @abstractmethod
-    def clean_data(self, dataFrame):
+    def process(self, data):
         pass
