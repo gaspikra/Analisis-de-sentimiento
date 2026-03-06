@@ -1,4 +1,4 @@
-from clean_data.ICleanDataFilter import ICleanDataFilter
+from steps.clean_data.ICleanDataFilter import ICleanDataFilter
 import pandas as pd
 import ast
 

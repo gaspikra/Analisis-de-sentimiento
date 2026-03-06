@@ -1,4 +1,4 @@
-from clean_data.ICleanDataFilter import ICleanDataFilter
+from steps.clean_data.ICleanDataFilter import ICleanDataFilter
 
 
 class SelectEnglishNews(ICleanDataFilter):

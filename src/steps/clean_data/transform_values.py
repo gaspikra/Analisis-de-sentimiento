@@ -1,5 +1,4 @@
-from clean_data.ICleanDataFilter import ICleanDataFilter
-
+from steps.clean_data.ICleanDataFilter import ICleanDataFilter
 
 class TransformValues(ICleanDataFilter):
     def process(self, data):
