@@ -5,6 +5,7 @@ class MastercardDataPipeline:
     def __init__(self):
         self.filter = []
         self.data_strategy = None
+        
     def set_data_strategy(self, strategy):
         self.data_strategy = strategy
 
@@ -20,7 +21,7 @@ class MastercardDataPipeline:
         return self
 
     def clean_data(self, data):
-        result = data
+        result = data.copy()
         for f in self.filter:
             result = f.process(result)
         self.__save_csv(result, 'final.csv')
