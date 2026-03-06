@@ -1,6 +1,6 @@
 import yfinance as yf
 from datetime import datetime
-from news_getter.IStrategy import IDataStrategy
+from data_getter.IStrategy import IDataStrategy
 
 class FinancialValues(IDataStrategy): 
     def obtain_data(self, ticker, start, end):

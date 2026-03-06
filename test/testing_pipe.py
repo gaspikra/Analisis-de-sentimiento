@@ -17,8 +17,8 @@ from steps.clean_data.select_english_news import SelectEnglishNews
 from steps.clean_data.english_news import EnglishNews
 from steps.clean_data.select_data import SelectData
 from steps.clean_data.transform_values import TransformValues
-from news_getter.strategies.historical_news_data import HistoricalNewsData
-from news_getter.strategies.historical_values_data import FinancialValues
+from data_getter.strategies.historical_news_data import HistoricalNewsData
+from data_getter.strategies.historical_values_data import FinancialValues
 
 
 api_key = os.getenv("API_KEY")
