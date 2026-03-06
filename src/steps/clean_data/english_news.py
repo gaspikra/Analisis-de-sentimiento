@@ -1,5 +1,5 @@
 from langdetect import detect
-from clean_data.ICleanDataFilter import ICleanDataFilter
+from steps.clean_data.ICleanDataFilter import ICleanDataFilter
 
 class EnglishNews(ICleanDataFilter):
     def process(self, dataframe):
