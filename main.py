@@ -2,6 +2,7 @@ import pandas as pd
 import os
 
 class MastercardDataPipeline:
+
     def __init__(self):
         self.filter = []
         self.data_strategy = None
@@ -26,13 +27,18 @@ class MastercardDataPipeline:
             result = f.process(result)
         self.__save_csv(result, 'final.csv')
         return result
-
-
+    
+    def mergeData(self, merge_func, news_df, stock_df):
+        joined_df = merge_func.integration(news_df, stock_df)
+        self.__save_csv(joined_df, "merged_final.csv")
+        return joined_df
+    
     def __save_csv(self,df, name):
         folder_path = "data/csv"
         os.makedirs(folder_path, exist_ok=True)
         file_path = os.path.join(folder_path, name)
         df.to_csv(file_path, index=False)
+    
 
         
 
