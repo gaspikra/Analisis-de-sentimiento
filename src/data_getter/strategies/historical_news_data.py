@@ -1,5 +1,5 @@
 import requests
-from news_getter.IStrategy import IDataStrategy
+from data_getter.IStrategy import IDataStrategy
 
 
 
