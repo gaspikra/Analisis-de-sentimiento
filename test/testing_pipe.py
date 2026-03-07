@@ -11,6 +11,7 @@ sys.path.append(root_path)
 sys.path.append(os.path.join(root_path, 'src'))
 
 
+from steps.clean_data.final_null_treatment import FillNaTreatment
 from steps.integration import DataIntegration
 from steps.feature_engineering.sentimient_classification import SentimentClassification
 from main import MastercardDataPipeline
@@ -38,6 +39,7 @@ transform_values = TransformValues()
 select_english_news = SelectEnglishNews()
 transform_data_news = TransformDateTypes('date')
 transform_data_stock = TransformDateTypes('Date')
+null_treatment = FillNaTreatment()
 #scoring_news = SentimentClassification()
 merger = DataIntegration()
 
@@ -46,14 +48,15 @@ merger = DataIntegration()
 #pipeline.set_data_strategy(news_stock_strat)
 #news_values = pipeline.obtain_data('MA','2024-01-01','2026-03-04')
 data_values = pd.read_csv('data/csv/stock_values_from_2023-07-17_to_2026-03-04.csv')
-news_values = pd.read_csv('data/csv/final.csv')
+last_data = pd.read_csv('data/csv/merged_final.csv')
 #pipeline.add_filter(selected_data)
 #pipeline.add_filter(english_news)
 #pipeline.add_filter(transform_values)
 #pipeline.add_filter(select_english_news)
 #pipeline.add_filter(transform_data_news)
 #pipeline.add_filter(scoring_news)
-#pipeline.clean_data(news_values)
 #pipeline.add_filter(transform_data_stock)
-pipeline.mergeData(merger, news_values, data_values)
+#pipeline.mergeData(merger, news_values, data_values)
+pipeline.add_filter(null_treatment)
+pipeline.clean_data(last_data)
 
