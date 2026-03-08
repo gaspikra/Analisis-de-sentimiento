@@ -4,9 +4,10 @@ import os
 class MastercardDataPipeline:
 
     def __init__(self):
-        self.news_filter = []
+        self.news_filters = []
+        self.stock_filters = []
         self.data_strategy = None
-        self.data_filter = []
+        self.stocks_features = None
         
         
     def set_data_strategy(self, strategy):
@@ -19,21 +20,39 @@ class MastercardDataPipeline:
         self.__save_csv(data_frame, results['csv name'])
         return data_frame, f"{results['csv name']}.csv"
 
-    def add_filter(self, filter_obj):
-        self.news_filter.append(filter_obj)
+    def add_news_filter(self, filter_obj):
+        self.news_filters.append(filter_obj)
+        return self
+    
+    def add_stock_filter(self, filter_obj):
+        self.stock_filters.append(filter_obj)
         return self
 
-    def clean_data(self, data):
+    def _apply_filters(self, data, filters):
         result = data.copy()
-        for f in self.news_filter:
+        for f in filters:
             result = f.process(result)
-        self.__save_csv(result, 'final.csv')
         return result
     
-    def merge_data(self, merge_func, news_df, stock_df):
-        joined_df = merge_func.integration(news_df, stock_df)
-        self.__save_csv(joined_df, "merged_final.csv")
-        return joined_df
+    def run(self, news_df, stock_df, merger, apply_features= True):
+        cleaned_news = self._appyl_filters(news_df, self.news_filters)
+        self.__save_csv(cleaned_news, 'cleaned_news.csv')
+
+        merged_df = merger.integration(cleaned_news, stock_df)
+        self.__save_csv(merged_df, 'merged.csv')
+
+        processed_df = self._apply_filters(merged_df, self.stock_filters)
+        self.__save_csv(processed_df, 'final.csv')
+
+        if apply_features and self.stocks_features:
+            final_df = self.stocks_features.process(processed_df)
+            self.__save_csv(final_df, 'final_with_features.csv')
+        else:
+            final_df = processed_df
+    
+
+        return final_df
+    
     
     def __save_csv(self,df, name):
         folder_path = "data/csv"
