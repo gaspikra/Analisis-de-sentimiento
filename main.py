@@ -4,8 +4,10 @@ import os
 class MastercardDataPipeline:
 
     def __init__(self):
-        self.filter = []
+        self.news_filter = []
         self.data_strategy = None
+        self.data_filter = []
+        
         
     def set_data_strategy(self, strategy):
         self.data_strategy = strategy
@@ -18,12 +20,12 @@ class MastercardDataPipeline:
         return data_frame, f"{results['csv name']}.csv"
 
     def add_filter(self, filter_obj):
-        self.filter.append(filter_obj)
+        self.news_filter.append(filter_obj)
         return self
 
     def clean_data(self, data):
         result = data.copy()
-        for f in self.filter:
+        for f in self.news_filter:
             result = f.process(result)
         self.__save_csv(result, 'final.csv')
         return result
