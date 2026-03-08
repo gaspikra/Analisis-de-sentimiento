@@ -59,8 +59,11 @@ pipeline.add_stock_filter(null_treatment)
 pipeline.clean_data(last_data)
 
 news_data = pd.read_csv('data/csv/final.csv')
-pipeline.merge_data(merger, news_data, data_values)
-pipeline.add_filter(null_treatment)
+
+
+
+#esto para el final
+pipeline.add_stock_filter(null_treatment)
 
 
 
