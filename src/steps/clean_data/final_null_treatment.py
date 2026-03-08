@@ -1,7 +1,7 @@
 from steps.clean_data.ICleanDataFilter import ICleanDataFilter
 
 
-class FillNaTreatment(ICleanDataFilter):
+class NewsFillNaTreatment(ICleanDataFilter):
     def process(self, data):
         cols = ['ma','axp','cof', 'news_score']
         data['has_news'] = data['news_score'].notna().astype(int)

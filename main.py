@@ -35,14 +35,12 @@ class MastercardDataPipeline:
         return result
     
     def run(self, news_df, stock_df, merger, apply_features= True):
+        
         cleaned_news = self._appyl_filters(news_df, self.news_filters)
         self.__save_csv(cleaned_news, 'cleaned_news.csv')
 
         merged_df = merger.integration(cleaned_news, stock_df)
         self.__save_csv(merged_df, 'merged.csv')
-
-        processed_df = self._apply_filters(merged_df, self.stock_filters)
-        self.__save_csv(processed_df, 'final.csv')
 
         if apply_features and self.stocks_features:
             final_df = self.stocks_features.process(processed_df)
@@ -50,6 +48,8 @@ class MastercardDataPipeline:
         else:
             final_df = processed_df
     
+        processed_df = self._apply_filters(merged_df, self.stock_filters)
+        self.__save_csv(processed_df, 'final.csv')
 
         return final_df
     
