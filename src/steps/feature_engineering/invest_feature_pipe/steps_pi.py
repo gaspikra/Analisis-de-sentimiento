@@ -7,13 +7,14 @@ class Ema_aggregation(IFeaturing):
         self.periods = periods
 
     def process(self, data):
-        data[f'ema{str(self.periods)}'] = data['adjusted_clodse'].ewm(span=self.periods,adjust=False).mean()
+        data[f'ema{str(self.periods)}'] = data['Adj Close'].ewm(span=self.periods,adjust=False).mean()
         data = self._get_distance(data)
-        data.drop(f'ema{str(self.periods)}',axis=1, inplace=True)
+        data.drop([f'ema{str(self.periods)}'],axis=1, inplace=True)
         return data
     
     def _get_distance(self, data):
-        data[f'distance_ema_{str(self.periods)}'] = (data[f'ema{str(self.periods)}'] - data['adjusted_close']) / data[f'ema{str(self.periods)}']
+        data[f'distance_ema_{str(self.periods)}'] = (data[f'ema{str(self.periods)}'] - data['Adj Close']) / data[f'ema{str(self.periods)}']
+        return data 
     
     
 
@@ -23,13 +24,14 @@ class Mma_agregation(IFeaturing):
         self.periods = periods
 
     def process(self, data):
-        data[f'mma{str(self.periods)}'] = data['adjusted_close'].rolling(self.periods).mean()
+        data[f'mma{str(self.periods)}'] = data['Adj Close'].rolling(self.periods).mean()
         data = self._get_distance(data)
-        data.drop(f'mma{str(self.periods)}',axis=1, inplace=True)
+        data.drop([f'mma{str(self.periods)}'],axis=1, inplace=True)
         return data
 
     def _get_distance(self, data):
-        data[f'distance_mma_{str(self.periods)}'] = (data[f'mma{str(self.periods)}'] - data['adjusted_close']) / data[f'mma{str(self.periods)}']
+        data[f'distance_mma_{str(self.periods)}'] = (data[f'mma{str(self.periods)}'] - data['Adj Close']) / data[f'mma{str(self.periods)}']
+        return data 
         
 
 class Rsi_aggregation(IFeaturing):
@@ -38,7 +40,7 @@ class Rsi_aggregation(IFeaturing):
         self.periods = periods
     
     def process(self, data):
-        data[f'rsi_{str(self.periods)}'] = ta.rsi(data['adjusted_close'], length= int(self.periods))
+        data[f'rsi_{str(self.periods)}'] = ta.rsi(data['Adj Close'], length= int(self.periods))
         return data
 
 
@@ -48,5 +50,6 @@ class Target_agregation(IFeaturing):
         self.periods = periods
         
     def process(self, data):
-        data['adjusted_close'].shift( - int(self.periods)).pct_change()
+        future_price = data['Adj Close'].shift(-int(self.periods))
+        data['target'] = (future_price / data['Adj Close']) - 1
         return data
