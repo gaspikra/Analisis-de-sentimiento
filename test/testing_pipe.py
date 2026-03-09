@@ -22,6 +22,10 @@ from steps.clean_data.transform_values import TransformValues
 from data_getter.strategies.historical_news_data import HistoricalNewsData
 from data_getter.strategies.historical_values_data import FinancialValues
 
+sys.path.append(os.path.abspath("../src"))
+
+from steps.feature_engineering.invest_feature_pipe.feature_technical_agg import FeatureAgregation
+from steps.feature_engineering.invest_feature_pipe.steps_pi import Ema_aggregation, Mma_agregation, Rsi_aggregation, Target_agregation
 
 api_key = os.getenv("API_KEY")
 print(api_key)
@@ -29,7 +33,7 @@ print(api_key)
 
 pipeline = MastercardDataPipeline()
 news_stock_strat = HistoricalNewsData(api_key) 
-
+stock_pipe = FeatureAgregation()
 
 values_stock_strat = FinancialValues()
 selected_data = SelectData()
@@ -49,21 +53,35 @@ merger = DataIntegration()
 last_data = pd.read_csv('data/csv/news_from_2024-01-01_to_2026-03-04.csv')
 data_values = pd.read_csv('data/csv/stock_values_from_2022-09-01_to_2026-03-04.csv')
 
-pipeline.add_news_filter(selected_data)
-pipeline.add_news_filter(english_news)
-pipeline.add_news_filter(transform_values)
-pipeline.add_news_filter(select_english_news)
-pipeline.add_news_filter(scoring_news)
+#pipeline.add_news_filter(selected_data)
+#pipeline.add_news_filter(english_news)
+#pipeline.add_news_filter(transform_values)
+#pipeline.add_news_filter(select_english_news)
+#pipeline.add_news_filter(scoring_news)
+#pipeline.add_stock_filter(null_treatment)
+
+
+ema8 = Ema_aggregation(8)
+ema21 = Ema_aggregation(21)
+rsi14 = Rsi_aggregation(14)
+mma200 = Mma_agregation(200)
+target = Target_agregation(1)
+
+stock_pipe.add_feature(ema8)
+stock_pipe.add_feature(ema21)
+stock_pipe.add_feature(rsi14)
+stock_pipe.add_feature(mma200)
+stock_pipe.add_feature(target)
 
 pipeline.add_stock_filter(null_treatment)
-pipeline.clean_data(last_data)
+pipeline.set_stock_features(stock_pipe)
+
+#pipeline.run()
 
 news_data = pd.read_csv('data/csv/final.csv')
 
 
 
-#esto para el final
-pipeline.add_stock_filter(null_treatment)
 
 
 

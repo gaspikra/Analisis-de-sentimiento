@@ -50,5 +50,6 @@ class Target_agregation(IFeaturing):
         self.periods = periods
         
     def process(self, data):
-        data['target'] = data['Adj Close'].shift( - int(self.periods)).pct_change()
+        future_price = data['Adj Close'].shift(-int(self.periods))
+        data['target'] = (future_price / data['Adj Close']) - 1
         return data
