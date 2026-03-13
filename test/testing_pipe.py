@@ -14,7 +14,7 @@ sys.path.append(os.path.join(root_path, 'src'))
 from steps.clean_data.final_null_treatment import NewsFillNaTreatment
 from steps.integration import DataIntegration
 from steps.feature_engineering.sentimient_classification import SentimentClassification
-from main import MastercardDataPipeline
+from pipeline import MastercardDataPipeline
 from steps.clean_data.select_english_news import SelectEnglishNews
 from steps.clean_data.english_news import EnglishNews
 from steps.clean_data.select_data import SelectData
