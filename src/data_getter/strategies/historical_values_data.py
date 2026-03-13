@@ -1,5 +1,4 @@
 import yfinance as yf
-from datetime import datetime
 from data_getter.IStrategy import IDataStrategy
 
 class FinancialValues(IDataStrategy): 

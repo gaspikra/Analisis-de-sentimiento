@@ -1,0 +1,13 @@
+[project]
+name = "proyecto-mastercard"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "langdetect>=1.0.9",
+    "pandas>=3.0.1",
+    "requests>=2.32.5",
+    "transformers>=5.3.0",
+    "yfinance>=1.2.0",
+]
