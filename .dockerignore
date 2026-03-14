@@ -2,6 +2,9 @@
 .venv/
 venv/
 env/
+.cache/
+data/
+.git/
 
 __pycache__/
 *.py[cod]
