@@ -1,6 +1,6 @@
 import requests
 from data_getter.IStrategy import IDataStrategy
-
+from datetime import datetime
 
 
 class HistoricalNewsData(IDataStrategy):
@@ -35,4 +35,6 @@ class HistoricalNewsData(IDataStrategy):
             print(f"Ocurrio un error en la peticion a Massive: {e}")
             return {"results": [], "csv name": f"error_news.csv"}
 
-    
+    def obtain_today_data(self, ticker):
+        today = datetime.now().strftime("%Y-%m-%d")
+        return self.obtain_data(ticker, today, today)
