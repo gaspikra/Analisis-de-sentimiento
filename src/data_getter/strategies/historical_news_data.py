@@ -1,6 +1,6 @@
 import requests
 from data_getter.IStrategy import IDataStrategy
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class HistoricalNewsData(IDataStrategy):
@@ -28,13 +28,16 @@ class HistoricalNewsData(IDataStrategy):
                     "csv name": f"news_from_{start}_to_{end}.csv"
                 }
             else:
-                print(f"Massive no devolvio 'results'. Respuesta cruda: {data_json}")
+                print(f"Massive no devolvio 'results'. Respuesta: {data_json}")
                 return {"results": [], "csv name": f"error_news.csv"}
                 
         except Exception as e:
             print(f"Ocurrio un error en la peticion a Massive: {e}")
             return {"results": [], "csv name": f"error_news.csv"}
 
-    def obtain_today_data(self, ticker):
-        today = datetime.now().strftime("%Y-%m-%d")
-        return self.obtain_data(ticker, today, today)
+
+    def obtain_last_week_data(self, ticker):
+        today = datetime.now()
+        last_week = (today - timedelta(days=7)).strftime("%Y-%m-%d")
+        today_str = today.strftime("%Y-%m-%d")
+        return self.obtain_data(ticker, last_week, today_str)
