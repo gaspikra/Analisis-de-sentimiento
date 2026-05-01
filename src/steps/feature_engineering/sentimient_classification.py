@@ -17,7 +17,7 @@ class SentimentClassification(IFeaturing):
             self._contextualize_model(str(txt)[:2000]) if pd.notna(txt) and txt else ""
             for txt in data["real_news"]
         ]
-        score_result = self.nlp(contextualized_texts, batch_size=100)
+        score_result = self.nlp(contextualized_texts, batch_size=10)
         scores_finales = []
         for i, result in enumerate(score_result):
             noticia_original = data.iloc[i]['real_news']
