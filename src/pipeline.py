@@ -1,9 +1,11 @@
 import pandas as pd
 import os
+import logging 
 
 class MastercardDataPipeline:
 
     def __init__(self):
+        self.logger = logging.getLogger("MastercardPipeline")
         self.news_filters = []
         self.stock_filters = []
         self.data_strategy = None
@@ -34,13 +36,23 @@ class MastercardDataPipeline:
     def _apply_filters(self, data, filters):
         result = data.copy()
         for f in filters:
-            result = f.process(result)
+            filter_name = f.__class__.__name__
+            try:
+                self.logger.info(f"iniciando paso: {filter_name}")
+                result = f.process(result)
+                self.logger.info(f"finalizado con exito el paso: {filter_name}")
+            except Exception as e:
+                self.logger.exception(f"Error critico en el paso: {filter_name}")
+                raise e
         return result
 
     def run(self, news_df, stock_df, merger, apply_features= True):
-        
-        cleaned_news = self._apply_filters(news_df, self.news_filters)
-        self.__save_csv(cleaned_news, 'cleaned_news.csv')
+        file_path_cleaned = "data/csv/cleaned_news.csv"
+        if os.path.exists(file_path_cleaned):
+            cleaned_news = pd.read_csv(file_path_cleaned)
+        else:
+            cleaned_news = self._apply_filters(news_df, self.news_filters)
+            self.__save_csv(cleaned_news, 'cleaned_news.csv')
 
 
         if merger is not None:

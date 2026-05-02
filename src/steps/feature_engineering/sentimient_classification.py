@@ -6,7 +6,11 @@ from transformers import  pipeline
 class SentimentClassification(IFeaturing):
 
     def __init__(self):
-        self.nlp = pipeline("sentiment-analysis", model="ProsusAI/finbert")
+        self.nlp = pipeline(
+            "sentiment-analysis",
+            model="ProsusAI/finbert",
+            truncation=True,
+            max_length=512)
 
     def process(self, data):
         process_data = data.copy()
@@ -14,7 +18,7 @@ class SentimentClassification(IFeaturing):
 
     def _get_sentiment(self, data):
         contextualized_texts = [
-            self._contextualize_model(str(txt)[:2000]) if pd.notna(txt) and txt else ""
+            self._contextualize_model(str(txt)) if pd.notna(txt) and txt else ""
             for txt in data["real_news"]
         ]
         score_result = self.nlp(contextualized_texts, batch_size=10)
