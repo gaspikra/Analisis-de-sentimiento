@@ -1,0 +1,180 @@
+2026-05-02 12:46:34,409 [INFO] MainPipeline: INICIANDO PIPELINE DE MASTERCARD
+2026-05-02 12:46:34,626 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/ProsusAI/finbert/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-02 12:46:34,626 [WARNING] huggingface_hub.utils._http: Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-05-02 12:46:34,635 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ProsusAI/finbert/4556d13015211d73dccd3fdd39d39232506f3e43/config.json "HTTP/1.1 200 OK"
+2026-05-02 12:46:34,818 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/ProsusAI/finbert/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+2026-05-02 12:46:35,016 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/ProsusAI/finbert "HTTP/1.1 200 OK"
+2026-05-02 12:46:35,225 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/ProsusAI/finbert/commits/main "HTTP/1.1 200 OK"
+2026-05-02 12:46:35,422 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/ProsusAI/finbert/discussions?p=0 "HTTP/1.1 200 OK"
+2026-05-02 12:46:35,444 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/ProsusAI/finbert/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-05-02 12:46:35,596 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/ProsusAI/finbert/commits/refs%2Fpr%2F29 "HTTP/1.1 200 OK"
+2026-05-02 12:46:35,607 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/ProsusAI/finbert/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-05-02 12:46:35,631 [INFO] MainPipeline: Cargando datos de entrada
+2026-05-02 12:46:35,655 [INFO] MainPipeline: Procesando sentimientos y metricas tecnicas...
+2026-05-02 12:46:35,656 [INFO] MastercardPipeline: iniciando paso: SelectData
+2026-05-02 12:46:35,690 [INFO] MastercardPipeline: finalizado con exito el paso: SelectData
+2026-05-02 12:46:35,690 [INFO] MastercardPipeline: iniciando paso: EnglishNews
+2026-05-02 12:46:35,827 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/ProsusAI/finbert/resolve/refs%2Fpr%2F29/model.safetensors.index.json "HTTP/1.1 404 Not Found"
+2026-05-02 12:46:35,988 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/ProsusAI/finbert/resolve/refs%2Fpr%2F29/model.safetensors "HTTP/1.1 302 Found"
+2026-05-02 12:46:37,863 [INFO] MastercardPipeline: finalizado con exito el paso: EnglishNews
+2026-05-02 12:46:37,864 [INFO] MastercardPipeline: iniciando paso: TransformValues
+2026-05-02 12:46:37,868 [INFO] MastercardPipeline: finalizado con exito el paso: TransformValues
+2026-05-02 12:46:37,868 [INFO] MastercardPipeline: iniciando paso: SelectEnglishNews
+2026-05-02 12:46:37,868 [INFO] MastercardPipeline: finalizado con exito el paso: SelectEnglishNews
+2026-05-02 12:46:37,868 [INFO] MastercardPipeline: iniciando paso: SentimentClassification
+2026-05-02 12:48:05,936 [INFO] MastercardPipeline: finalizado con exito el paso: SentimentClassification
+2026-05-02 12:48:05,970 [ERROR] MainPipeline: Ocurrió un error inesperado en el pipeline
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\main.py", line 70, in run_production_pipeline
+    result = pipe.run(news_df, stock_df, merger)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\src\pipeline.py", line 56, in run
+    merged_df = merger.integration(cleaned_news, stock_df)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\src\steps\integration.py", line 6, in integration
+    modificated_news_df = self._daily_mean_score(modificated_news_df)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\src\steps\integration.py", line 14, in _daily_mean_score
+    agrupated_df = data.groupby('Date').agg({
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\.venv\Lib\site-packages\pandas\core\groupby\generic.py", line 1432, in aggregate
+    result = op.agg()
+             ^^^^^^^^
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\.venv\Lib\site-packages\pandas\core\apply.py", line 190, in agg
+    return self.agg_dict_like()
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\.venv\Lib\site-packages\pandas\core\apply.py", line 423, in agg_dict_like
+    return self.agg_or_apply_dict_like(op_name="agg")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\.venv\Lib\site-packages\pandas\core\apply.py", line 1603, in agg_or_apply_dict_like
+    result_index, result_data = self.compute_dict_like(
+                                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\.venv\Lib\site-packages\pandas\core\apply.py", line 462, in compute_dict_like
+    func = self.normalize_dictlike_arg(op_name, selected_obj, func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\.venv\Lib\site-packages\pandas\core\apply.py", line 663, in normalize_dictlike_arg
+    raise KeyError(f"Column(s) {list(cols)} do not exist")
+KeyError: "Column(s) ['news_score'] do not exist"
+2026-05-02 14:47:27,482 [INFO] MainPipeline: INICIANDO PIPELINE DE MASTERCARD
+2026-05-02 14:47:27,741 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/ProsusAI/finbert/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-02 14:47:27,741 [WARNING] huggingface_hub.utils._http: Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-05-02 14:47:27,751 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ProsusAI/finbert/4556d13015211d73dccd3fdd39d39232506f3e43/config.json "HTTP/1.1 200 OK"
+2026-05-02 14:47:27,949 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/ProsusAI/finbert/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+2026-05-02 14:47:28,154 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/ProsusAI/finbert "HTTP/1.1 200 OK"
+2026-05-02 14:47:28,466 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/ProsusAI/finbert/commits/main "HTTP/1.1 200 OK"
+2026-05-02 14:47:28,800 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/ProsusAI/finbert/discussions?p=0 "HTTP/1.1 200 OK"
+2026-05-02 14:47:29,206 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/ProsusAI/finbert/commits/refs%2Fpr%2F29 "HTTP/1.1 200 OK"
+2026-05-02 14:47:29,413 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/ProsusAI/finbert/resolve/refs%2Fpr%2F29/model.safetensors.index.json "HTTP/1.1 404 Not Found"
+2026-05-02 14:47:29,578 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/ProsusAI/finbert/resolve/refs%2Fpr%2F29/model.safetensors "HTTP/1.1 302 Found"
+2026-05-02 14:47:29,649 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/ProsusAI/finbert/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-05-02 14:47:29,810 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/ProsusAI/finbert/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-05-02 14:47:29,850 [INFO] MainPipeline: Cargando datos de entrada
+2026-05-02 14:47:29,898 [INFO] MainPipeline: Procesando sentimientos y metricas tecnicas...
+2026-05-02 14:47:29,906 [INFO] steps.integration: iniciando paso de merging
+2026-05-02 14:47:29,907 [INFO] steps.integration: configurando campos para mergear:
+2026-05-02 14:47:29,921 [INFO] steps.integration: media de los datos obtenida correctamente
+2026-05-02 14:47:29,949 [INFO] steps.integration: mergeo satisfactorio
+2026-05-02 14:47:29,961 [INFO] steps.feature_engineering.invest_feature_pipe.steps_pi: iniciando agregacion de Emas
+2026-05-02 14:47:29,965 [INFO] steps.feature_engineering.invest_feature_pipe.steps_pi: iniciando agregacion de Emas
+2026-05-02 14:47:29,967 [INFO] steps.feature_engineering.invest_feature_pipe.steps_pi: calculando MMA200
+2026-05-02 14:47:29,968 [INFO] steps.feature_engineering.invest_feature_pipe.steps_pi: agregando TARGET a la tabla en steps.feature_engineering.invest_feature_pipe.steps_pi
+2026-05-02 14:47:29,981 [INFO] MastercardPipeline: iniciando paso: NewsFillNaTreatment
+2026-05-02 14:47:29,981 [ERROR] MastercardPipeline: Error critico en el paso: NewsFillNaTreatment
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\.venv\Lib\site-packages\pandas\core\indexes\base.py", line 3812, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas/_libs/index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7088, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7096, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'news_score'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\src\pipeline.py", line 42, in _apply_filters
+    result = f.process(result)
+             ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\src\steps\clean_data\final_null_treatment.py", line 7, in process
+    data['has_news'] = data['news_score'].notna().astype(int)
+                       ~~~~^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\.venv\Lib\site-packages\pandas\core\frame.py", line 4113, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\.venv\Lib\site-packages\pandas\core\indexes\base.py", line 3819, in get_loc
+    raise KeyError(key) from err
+KeyError: 'news_score'
+2026-05-02 14:47:30,035 [ERROR] MainPipeline: Ocurrió un error inesperado en el pipeline
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\.venv\Lib\site-packages\pandas\core\indexes\base.py", line 3812, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas/_libs/index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7088, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7096, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'news_score'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\main.py", line 70, in run_production_pipeline
+    result = pipe.run(news_df, stock_df, merger)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\src\pipeline.py", line 70, in run
+    processed_df = self._apply_filters(current_df, self.stock_filters)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\src\pipeline.py", line 46, in _apply_filters
+    raise e
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\src\pipeline.py", line 42, in _apply_filters
+    result = f.process(result)
+             ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\src\steps\clean_data\final_null_treatment.py", line 7, in process
+    data['has_news'] = data['news_score'].notna().astype(int)
+                       ~~~~^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\.venv\Lib\site-packages\pandas\core\frame.py", line 4113, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\Desktop\proyecto mastercard\.venv\Lib\site-packages\pandas\core\indexes\base.py", line 3819, in get_loc
+    raise KeyError(key) from err
+KeyError: 'news_score'
+2026-05-02 14:50:12,475 [INFO] MainPipeline: INICIANDO PIPELINE DE MASTERCARD
+2026-05-02 14:50:12,690 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/ProsusAI/finbert/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-05-02 14:50:12,699 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/ProsusAI/finbert/4556d13015211d73dccd3fdd39d39232506f3e43/config.json "HTTP/1.1 200 OK"
+2026-05-02 14:50:12,893 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/ProsusAI/finbert/resolve/main/model.safetensors "HTTP/1.1 404 Not Found"
+2026-05-02 14:50:13,057 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/ProsusAI/finbert "HTTP/1.1 200 OK"
+2026-05-02 14:50:13,255 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/ProsusAI/finbert/commits/main "HTTP/1.1 200 OK"
+2026-05-02 14:50:13,439 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/ProsusAI/finbert/discussions?p=0 "HTTP/1.1 200 OK"
+2026-05-02 14:50:13,472 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/ProsusAI/finbert/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-05-02 14:50:13,615 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/ProsusAI/finbert/commits/refs%2Fpr%2F29 "HTTP/1.1 200 OK"
+2026-05-02 14:50:13,637 [INFO] httpx: HTTP Request: GET https://huggingface.co/api/models/ProsusAI/finbert/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-05-02 14:50:13,659 [INFO] MainPipeline: Cargando datos de entrada
+2026-05-02 14:50:13,684 [INFO] MainPipeline: Procesando sentimientos y metricas tecnicas...
+2026-05-02 14:50:13,685 [INFO] MastercardPipeline: iniciando paso: SelectData
+2026-05-02 14:50:13,731 [INFO] MastercardPipeline: finalizado con exito el paso: SelectData
+2026-05-02 14:50:13,732 [INFO] MastercardPipeline: iniciando paso: EnglishNews
+2026-05-02 14:50:13,886 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/ProsusAI/finbert/resolve/refs%2Fpr%2F29/model.safetensors.index.json "HTTP/1.1 404 Not Found"
+2026-05-02 14:50:14,048 [INFO] httpx: HTTP Request: HEAD https://huggingface.co/ProsusAI/finbert/resolve/refs%2Fpr%2F29/model.safetensors "HTTP/1.1 302 Found"
+2026-05-02 14:50:16,182 [INFO] MastercardPipeline: finalizado con exito el paso: EnglishNews
+2026-05-02 14:50:16,182 [INFO] MastercardPipeline: iniciando paso: TransformValues
+2026-05-02 14:50:16,199 [INFO] MastercardPipeline: finalizado con exito el paso: TransformValues
+2026-05-02 14:50:16,199 [INFO] MastercardPipeline: iniciando paso: SelectEnglishNews
+2026-05-02 14:50:16,199 [INFO] MastercardPipeline: finalizado con exito el paso: SelectEnglishNews
+2026-05-02 14:50:16,199 [INFO] MastercardPipeline: iniciando paso: SentimentClassification
+2026-05-02 14:51:37,724 [INFO] MastercardPipeline: finalizado con exito el paso: SentimentClassification
+2026-05-02 14:51:37,734 [INFO] steps.integration: iniciando paso de merging
+2026-05-02 14:51:37,734 [INFO] steps.integration: configurando campos para mergear:
+2026-05-02 14:51:37,739 [INFO] steps.integration: media de los datos obtenida correctamente
+2026-05-02 14:51:37,749 [INFO] steps.integration: mergeo satisfactorio
+2026-05-02 14:51:37,759 [INFO] steps.feature_engineering.invest_feature_pipe.steps_pi: iniciando agregacion de Emas
+2026-05-02 14:51:37,761 [INFO] steps.feature_engineering.invest_feature_pipe.steps_pi: iniciando agregacion de Emas
+2026-05-02 14:51:37,762 [INFO] steps.feature_engineering.invest_feature_pipe.steps_pi: calculando MMA200
+2026-05-02 14:51:37,763 [INFO] steps.feature_engineering.invest_feature_pipe.steps_pi: agregando TARGET a la tabla en steps.feature_engineering.invest_feature_pipe.steps_pi
+2026-05-02 14:51:37,776 [INFO] MastercardPipeline: iniciando paso: NewsFillNaTreatment
+2026-05-02 14:51:37,778 [INFO] MastercardPipeline: finalizado con exito el paso: NewsFillNaTreatment
+2026-05-02 14:51:37,779 [INFO] MastercardPipeline: iniciando paso: MeaninglessColumnsTreatment
+2026-05-02 14:51:37,779 [INFO] MastercardPipeline: finalizado con exito el paso: MeaninglessColumnsTreatment
+2026-05-02 14:51:37,779 [INFO] MastercardPipeline: iniciando paso: NaNTreatment
+2026-05-02 14:51:37,780 [INFO] MastercardPipeline: finalizado con exito el paso: NaNTreatment
+2026-05-02 14:51:37,790 [INFO] MainPipeline: ¡EXITO! Pipeline completado. Filas procesadas: 677

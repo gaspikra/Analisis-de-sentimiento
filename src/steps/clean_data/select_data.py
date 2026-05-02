@@ -3,9 +3,11 @@ import pandas as pd
 import ast
 
 class SelectData(ICleanDataFilter):
+
     def process(self, data):
         important_data = []
         records = data.to_dict('records')
+
         for news in records:
             if pd.notna(news.get("description")):
                 new_dict = {}

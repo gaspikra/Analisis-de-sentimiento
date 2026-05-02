@@ -21,13 +21,25 @@ from steps.clean_data.transform_values import TransformValues
 from steps.feature_engineering.sentimient_classification import SentimentClassification
 from steps.integration import DataIntegration
 from steps.clean_data.final_null_treatment import NewsFillNaTreatment
+import logging 
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
+    handlers=[
+        logging.FileHandler("pipeline_mastercard.log"),
+        logging.StreamHandler(sys.stdout)
+    ],
+    force=True 
+)
+logger = logging.getLogger("MainPipeline")
 
 def run_production_pipeline():
 
     load_dotenv()
     api_key = os.getenv("API_KEY")
     
-    print("--- INICIANDO PIPELINE DE MASTERCARD ---")
+    logger.info("INICIANDO PIPELINE DE MASTERCARD")
 
 
     pipe = MastercardDataPipeline()
@@ -37,7 +49,6 @@ def run_production_pipeline():
     stock_pipe.add_feature(Mma_agregation(200))
     stock_pipe.add_feature(Target_agregation(1))
 
-    print("Configurando filtros y modelos...")
     pipe.set_stock_features(stock_pipe)
     pipe.add_news_filter(SelectData())
     pipe.add_news_filter(EnglishNews())
@@ -50,18 +61,20 @@ def run_production_pipeline():
 
 
     try:
-        print("Cargando datos de entrada...")
+        logger.info("Cargando datos de entrada")
         news_df = pd.read_csv('data/csv/news_from_2024-01-01_to_2026-03-04.csv')
         stock_df = pd.read_csv('data/csv/stock_values_from_2022-09-01_to_2026-03-04.csv')
         
-        print("Procesando sentimientos y metricas tecnicas...")
+        logger.info("Procesando sentimientos y metricas tecnicas...")
         merger = DataIntegration()
         result = pipe.run(news_df, stock_df, merger)
         
-        print(f"¡EXITO! Pipeline completado. Filas procesadas: {len(result)}")
+        logger.info(f"¡EXITO! Pipeline completado. Filas procesadas: {len(result)}")
         
     except FileNotFoundError:
-        print("ERROR: No se encontraron los archivos CSV.")
+        logger.error("ERROR: No se encontraron los archivos CSV.")
+    except Exception:
+        logger.exception("Ocurrió un error inesperado en el pipeline")
 
 if __name__ == "__main__":
     run_production_pipeline()
