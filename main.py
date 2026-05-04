@@ -9,6 +9,7 @@ sys.path.append(os.path.join(os.getcwd(), 'src'))
 load_dotenv()
 
 
+from s3_adapter.s3_adapter import S3Adapter
 from steps.clean_data.null_stock_treatment.cleaning_stock_values import NaNTreatment
 from steps.clean_data.null_stock_treatment.delete_meaningless_columns import MeaninglessColumnsTreatment
 from steps.clean_data.select_english_news import SelectEnglishNews
@@ -35,8 +36,9 @@ logging.basicConfig(
 logger = logging.getLogger("MainPipeline")
 
 def run_production_pipeline():
-
     load_dotenv()
+    aws_storage = S3Adapter()
+
     api_key = os.getenv("API_KEY")
     
     logger.info("INICIANDO PIPELINE DE MASTERCARD")
@@ -64,13 +66,19 @@ def run_production_pipeline():
         logger.info("Cargando datos de entrada")
         news_df = pd.read_csv('data/csv/news_from_2024-01-01_to_2026-03-04.csv')
         stock_df = pd.read_csv('data/csv/stock_values_from_2022-09-01_to_2026-03-04.csv')
+        output_path = 'data/csv/final.csv'
         
-        logger.info("Procesando sentimientos y metricas tecnicas...")
+        logger.info("Procesando sentimientos")
         merger = DataIntegration()
         result = pipe.run(news_df, stock_df, merger)
         
-        logger.info(f"¡EXITO! Pipeline completado. Filas procesadas: {len(result)}")
-        
+        logger.info(f"Pipeline completado. Filas procesadas: {len(result)}")
+        aws_storage.upload_file(
+            local_path=output_path, 
+            bucket="mastercard-bucket", 
+            s3_path="processed/final_mastercard_data.csv"
+        )
+        logger.info(f"Datos almacenados en S3 correctamente")
     except FileNotFoundError:
         logger.error("ERROR: No se encontraron los archivos CSV.")
     except Exception:
