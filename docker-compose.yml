@@ -1,11 +1,30 @@
 version: '3.8'
 
 services:
+  # Tu pipeline actual de Mastercard
   mastercard-pipeline:
     build: .
     volumes:
-      - ./data:/app/data  
-      - ./.env:/app/.env  
+      - ./data:/app/data
+      - ./.env:/app/.env
     environment:
-      - API_KEY=${API_KEY}  
+      - API_KEY=${API_KEY}
+      # ESTO ES CLAVE: Le decimos a Python donde vive el AWS falso
+      - AWS_ENDPOINT_URL=http://localstack:4566[cite: 1]
+    networks:
+      - mastercard-network
     command: python main.py
+
+  localstack:
+    container_name: localstack_main
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3,ecr 
+    networks:
+      - mastercard-network
+
+networks:
+  mastercard-network:
+    driver: bridge[cite: 1]
