@@ -81,8 +81,8 @@ def run_production_pipeline():
         logger.info(f"Datos almacenados en S3 correctamente")
     except FileNotFoundError:
         logger.error("ERROR: No se encontraron los archivos CSV.")
-    except Exception:
-        logger.exception("Ocurrió un error inesperado en el pipeline")
+    except Exception as e:
+        logger.exception(f"Ocurrió un error inesperado en el pipeline {e}")
 
 if __name__ == "__main__":
     run_production_pipeline()

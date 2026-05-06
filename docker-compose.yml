@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # Tu pipeline actual de Mastercard
   mastercard-pipeline:
     build: .
     volumes:
@@ -9,7 +8,7 @@ services:
       - ./.env:/app/.env
     environment:
       - API_KEY=${API_KEY}
-      # Le decimos a Python donde vive el AWS falso usando el nombre del servicio
+      # donde vive el AWS falso usando el nombre del servicio
       - AWS_ENDPOINT_URL=http://localstack:4566
     networks:
       - mastercard-network
@@ -22,7 +21,7 @@ services:
     ports:
       - "4566:4566"
     environment:
-      - SERVICES=s3,ecr
+      - SERVICES=s3
     networks:
       - mastercard-network
 
