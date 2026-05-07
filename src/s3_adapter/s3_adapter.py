@@ -1,6 +1,8 @@
 import boto3
 import os
 import logging
+from botocore.exceptions import ClientError
+
 logger  = logging.getLogger(__name__)
 class S3Adapter:
     def __init__(self):
@@ -9,8 +11,21 @@ class S3Adapter:
             "s3", 
             endpoint_url=self.endpoint_url,
             aws_access_key_id="test", 
-            aws_secret_access_key="test"
+            aws_secret_access_key="test",
+            region_name="us-east-1"
         )
+        self._create_bucket("mastercard-bucket")
+
+    def _create_bucket(self, bucket_name):
+        try:
+            self.s3_client.head_bucket(Bucket=bucket_name)
+            logger.info(f"Bucket '{bucket_name}' creado o ya existente.")
+        except ClientError as e:
+            try:
+                self.s3_client.create_bucket(Bucket=bucket_name)
+                logger.info(f"Bucket '{bucket_name}' creado exitosamente.")
+            except Exception as e:
+                logger.error(f"Error fatal creando el bucket: {e}")
 
     def upload_file(self, local_path, bucket, s3_path):
         try:

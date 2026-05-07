@@ -8,23 +8,20 @@ services:
       - ./.env:/app/.env
     environment:
       - API_KEY=${API_KEY}
-      # donde vive el AWS falso usando el nombre del servicio
+      # Nombre del servicio abajo: localstack
       - AWS_ENDPOINT_URL=http://localstack:4566
-    networks:
-      - mastercard-network
-    command: python main.py
+    depends_on:
+      - localstack
 
-  # El simulador de AWS (LocalStack)
   localstack:
     container_name: localstack_main
-    image: localstack/localstack:latest
+    image: localstack/localstack:3.0
     ports:
-      - "4566:4566"
+      - "127.0.0.1:4566:4566"
     environment:
-      - SERVICES=s3
-    networks:
-      - mastercard-network
-
-networks:
-  mastercard-network:
-    driver: bridge
+      - DEBUG=${DEBUG-}
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - ACTIVATE_PRO=false
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
