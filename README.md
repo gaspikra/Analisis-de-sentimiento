@@ -73,7 +73,6 @@ El pipeline sigue un orden específico para procesar los datos de noticias y sto
    - **NaNTreatment**: Trata valores nulos en datos de stocks.
 
 Este orden garantiza que los datos se limpien y enriquezcan progresivamente antes de la integración final.
-<<<<<<< HEAD
 
 
 ## Chalenges
