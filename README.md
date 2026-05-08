@@ -16,12 +16,12 @@ En base a su resultado, se puede saber si esta accion va a subir o no, y tomar u
 Por un lado, recibir datos de distintas fuentes era un desafio ya que estos tienen que ser procesados para que el modelo pueda procesarlos y realizar predicciones.
 Entonces diseñé una estructura utilizando el patron Pipeline para ordenar el paso a paso. Para obtener puntuaciones de las noticias utilicé un modelo pre-entrenado FinBERT para que me de dichos scores.
 
-Primero para obtener los datos de distintas fuentes, use el patron Strategy, una estrategia por cada fuente, asi me evito tener que modificar el codigo principal y simplemente creo una nueva estrategia por cada vez que quiera agregar datos de otras fuentes, manteniendo la escalabilidad y orden del codigo.
-Luego cuando dockerize el pipeline, la imagen era bastante pesada, entonces tenia que elegir mejor la forma de implementar las librerias para hacer la imagen lo mas liviana posible, logrando pasar de un 7Gb a 1,29Gb. La imagen es para mantener un mejor versionado del codigo, y que este pueda funcionar en cualquier lugar sin tener que andar revisando dependencias.
+Primero para obtener los datos de distintas fuentes, usé el patron Strategy, una estrategia por cada fuente, asi me evito tener que modificar el codigo principal y simplemente creo una nueva estrategia por cada vez que quiera agregar datos de otras fuentes, manteniendo la escalabilidad y orden del codigo.
+Luego cuando Dockericé el pipeline, la imagen era bastante pesada, entonces tenia que elegir mejor la forma de implementar las librerias para hacer la imagen lo mas liviana posible, logrando pasar de un 7Gb a 1,29Gb. La imagen es para mantener un mejor versionado del codigo, y que este pueda funcionar en cualquier lugar sin tener que andar revisando dependencias. Ademas, es fundamental para la separación de responsabilidades, ya que el objetivo es tener una imagen para el procesamiento diario y otra para el entrenamiento.
 Luego, tuve que abandonar el proyecto para estudiar para mis examenes universitarios, aproximadamente 1 mes y medio (si, muchos parciales y 2 finales). Cuando volví, no recordaba los pasos del pipeline, y fallaba en algunas secciones que me costaba mucho tiempo encontrar. Es por eso que decidí Loggear todo el Pipeline, de esta manera es mas facil ver donde esta el error, y atacar especificamente ese lugar, ahorrandome mucho tiempo :D.
-En el momento de ejecutar mi proyecto, mi computadora se relentizaba muchiismo (cuello de botella en el consumo de memoria), miraba los procesos y se ocupaban 15Gb de las 16 que tengo... asi que tenia que solucionarlo de alguna manera, entonces es cuando decidi procesar los textos de las noticias (en el modelo  de scores de sentimiento) por lotes, para evitar el uso excesivo de memoria.
-
-## Colud Infra (simulation)
+En el momento de ejecutar mi proyecto, mi computadora se ralentizaba muchiismo (cuello de botella en el consumo de memoria), miraba los procesos y se ocupaban 15Gb de las 16 que tengo... asi que tenia que solucionarlo de alguna manera, entonces es cuando decidi procesar los textos de las noticias (en el modelo  de scores de sentimiento) por lotes, para evitar el uso excesivo de memoria.
+ El siguiente paso es crear el pipeline de entrenamiento y subir la imagen a ECR para el entrenamiento y re-entrenamiento con funcionalidades que presta el servicio para manejar todo el sistema, tales como Lambda (como disparador y orquestador).
+## Cloud Infra (simulation)
 Para asegurar que el pipeline sea cloud-ready, integré LocalStack para simular servicios de AWS en un entorno local y asi evitar usar creditos de AWS reales:
 Amazon S3: Utilizado como Data Lake para almacenar los resultados procesados en formato CSV.
 Docker Compose: Orquestación completa de los servicios (Pipeline + LocalStack) garantizando que el entorno sea reproducible con un solo comando.
@@ -73,18 +73,6 @@ El pipeline sigue un orden específico para procesar los datos de noticias y sto
    - **NaNTreatment**: Trata valores nulos en datos de stocks.
 
 Este orden garantiza que los datos se limpien y enriquezcan progresivamente antes de la integración final.
-
-
-## Chalenges
-
-Por un lado, recibir datos de distintas fuentes era un desafio ya que estos tienen que ser procesados para que el modelo pueda procesarlos y realizar predicciones.
-Entonces diseñé una estructura utilizando el patron Pipeline para ordenar el paso a paso. Para obtener puntuaciones de las noticias utilicé un modelo pre-entrenado FinBERT para que me de dichos scores.
-
-Primero para obtener los datos de distintas fuentes, use el patron Strategy, una estrategia por cada fuente, asi me evito tener que modificar el codigo principal y simplemente creo una nueva estrategia por cada vez que quiera agregar datos de otras fuentes, manteniendo la escalabilidad y orden del codigo. Luego, para desacoplar cada etapa de limpieza, ingeniería de datos y transformación utilicé el patron Pipeline. Por ultimo, utilicé el patron adapter para adaptar el SDK de AWS (boto3) a la interfaz del pipeline. Esto permite que el sistema se comunique con la nube (o con LocalStack para pruebas), facilitando futuros cambios de proveedor sin tocar la lógica central.
- 
-Cuando dockerizé el pipeline, la imagen era bastante pesada, entonces tenia que elegir mejor la forma de implementar las librerias para hacer la imagen lo mas liviana posible, logrando pasar de un 7Gb a 1,29Gb. La imagen es para mantener un mejor versionado del codigo, y que este pueda funcionar en cualquier lugar sin tener que andar revisando dependencias y para y separación de responsabilidades.
-Luego, tuve que abandonar el proyecto para estudiar para mis examenes universitarios, aproximadamente 1 mes y medio (si, muchos parciales y 2 finales). Cuando volví, no recordaba los pasos del pipeline, y fallaba en algunas secciones que me costaba mucho tiempo encontrar. Es por eso, que decidí Loggear todo el Pipeline, de esta manera es mas facil ver donde esta el error, y atacar especificamente ese lugar, ahorrandome mucho tiempo :D.
-En el momento de ejecutar mi proyecto, mi computadora se relentizaba muchiismo, miraba los procesos y se ocupaban 15Gb de las 16 que tengo... asi que tenia que solucionarlo de alguna manera, entonces es cuando me di cuenta que tenia que procesar por lotes los textos de las noticias para evitar el uso excesivo de memoria.
 
 ## Colud Infra (simulation)
 Para asegurar que el pipeline sea cloud-ready, integré LocalStack para simular servicios de AWS en un entorno local:
